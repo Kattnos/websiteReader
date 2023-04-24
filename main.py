@@ -9,12 +9,21 @@ root=tk.Tk()
 root.geometry('900x700')
 
 def updateText():
-    print('updating text')
     url = inputSelect.get()
 
     response = requests.get(url)
     html = response.text
-    soup = BeautifulSoup(html, 'lxml')
+    htmlContent = '<p ' + html.split('<p ', 1)[1]
+    htmlContent = htmlContent.rsplit('</p>', 1)[0] + '</p>'
+    while htmlContent.find('<div') != -1:
+        string = htmlContent.split('<div', 1)
+        left = string[0]
+        right = string[1]
+        rightFixed = right.split('</div>', 1)
+        htmlContent = left + rightFixed[1]
+
+
+    soup = BeautifulSoup(htmlContent, 'lxml')
 
     articleTitle = soup.title
     articleText = soup.get_text()
