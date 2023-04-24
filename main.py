@@ -13,22 +13,16 @@ def updateText():
 
     response = requests.get(url)
     html = response.text
-    htmlContent = '<p ' + html.split('<p ', 1)[1]
-    htmlContent = htmlContent.rsplit('</p>', 1)[0] + '</p>'
-    while htmlContent.find('<div') != -1:
-        string = htmlContent.split('<div', 1)
-        left = string[0]
-        right = string[1]
-        rightFixed = right.split('</div>', 1)
-        htmlContent = left + rightFixed[1]
 
+    print(html)
 
-    soup = BeautifulSoup(htmlContent, 'lxml')
+    soup = BeautifulSoup(html, 'lxml')
+    page = soup.find_all('p')
 
-    articleTitle = soup.title
-    articleText = soup.get_text()
     outputField.delete('1.0', tk.END)
-    outputField.insert(tk.END, articleText)
+
+    for text in page:
+        outputField.insert(tk.END, text.get_text())
 
 inputField = tk.Frame(root)
 inputSelect = tk.Entry(inputField, width=40)
